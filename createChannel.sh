@@ -87,5 +87,5 @@ else
 fi
 
 createChannel
-# joinChannel
-# updateAnchorPeers
+joinChannel
+updateAnchorPeers
