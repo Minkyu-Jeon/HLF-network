@@ -111,6 +111,7 @@ genesis.block
 artifacts/channel/Org1MSPanchors.tx
 artifacts/channel/Org2MSPanchors.tx
 artifacts/channel/crypto-config
+artifacts/channel/organizations
 fabric-client-kv-org1
 /package-lock.json
 crypto/*
