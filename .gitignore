@@ -139,3 +139,4 @@ artifacts/channel/crypto-config_cryptogen
 artifacts/src/github.com/vf
 artifacts/ca-operations/clients
 artifacts/ca-operations/fabric-ca
+artifacts/channel/*.tx

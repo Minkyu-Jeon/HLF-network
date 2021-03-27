@@ -20,12 +20,12 @@ fetchChannelConfig() {
 
   infoln "Fetching the most recent configuration block for the channel"
   set -x
-  peer channel fetch config config_block.pb -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com -c $CHANNEL --tls --cafile "$ORDERER_CA"
+  peer channel fetch config ./tmp/config_block.pb -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com -c $CHANNEL --tls --cafile "$ORDERER_CA"
   { set +x; } 2>/dev/null
 
   infoln "Decoding config block to JSON and isolating config to ${OUTPUT}"
   set -x
-  configtxlator proto_decode --input config_block.pb --type common.Block | jq .data.data[0].payload.data.config >"${OUTPUT}"
+  configtxlator proto_decode --input ./tmp/config_block.pb --type common.Block | jq .data.data[0].payload.data.config >"${OUTPUT}"
   { set +x; } 2>/dev/null
 }
 
@@ -40,12 +40,12 @@ createConfigUpdate() {
   OUTPUT=$4
 
   set -x
-  configtxlator proto_encode --input "${ORIGINAL}" --type common.Config >original_config.pb
-  configtxlator proto_encode --input "${MODIFIED}" --type common.Config >modified_config.pb
-  configtxlator compute_update --channel_id "${CHANNEL}" --original original_config.pb --updated modified_config.pb >config_update.pb
-  configtxlator proto_decode --input config_update.pb --type common.ConfigUpdate >config_update.json
-  echo '{"payload":{"header":{"channel_header":{"channel_id":"'$CHANNEL'", "type":2}},"data":{"config_update":'$(cat config_update.json)'}}}' | jq . >config_update_in_envelope.json
-  configtxlator proto_encode --input config_update_in_envelope.json --type common.Envelope >"${OUTPUT}"
+  configtxlator proto_encode --input "${ORIGINAL}" --type common.Config > ./tmp/original_config.pb
+  configtxlator proto_encode --input "${MODIFIED}" --type common.Config > ./tmp/modified_config.pb
+  configtxlator compute_update --channel_id "${CHANNEL}" --original ./tmp/original_config.pb --updated ./tmp/modified_config.pb > ./tmp/config_update.pb
+  configtxlator proto_decode --input ./tmp/config_update.pb --type common.ConfigUpdate > ./tmp/config_update.json
+  echo '{"payload":{"header":{"channel_header":{"channel_id":"'$CHANNEL'", "type":2}},"data":{"config_update":'$(cat ./tmp/config_update.json)'}}}' | jq . > ./tmp/config_update_in_envelope.json
+  configtxlator proto_encode --input ./tmp/config_update_in_envelope.json --type common.Envelope >"${OUTPUT}"
   { set +x; } 2>/dev/null
 }
 
