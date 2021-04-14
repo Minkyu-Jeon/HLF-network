@@ -2,10 +2,12 @@
 
 export DIR_NAME=organizations
 
+rm -rf ./${DIR_NAME}
+mkdir ./${DIR_NAME}
+
 chmod -R 0755 ./${DIR_NAME}
 
 # Delete existing artifacts
-rm -rf ./${DIR_NAME}
 rm genesis.block mychannel.tx
 rm -rf ../../channel-artifacts/*
 
